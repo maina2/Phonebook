@@ -21,26 +21,35 @@ import {
   addUserToGroup,
   removeUserFromGroup,
 } from "../controllers/UserGroupControllers.js";
+import { requireLogin } from "../controllers/authControllers.js";
 
-const todoRoutes = (app) => {
-  app.route("/user").get(getUsers).post(createUser);
-  app.route("/user/:id").put(updateUser).get(getUser).delete(deleteUser);
+const PhoneBookRoutes = (app) => {
+  app.route("/user").get(requireLogin, getUsers).post(requireLogin, createUser);
+  app
+    .route("/user/:id")
+    .put(requireLogin, updateUser)
+    .get(requireLogin, getUser)
+    .delete(requireLogin, deleteUser);
 
-  app.route("/group").get(getUsersGroups).post(createUserGroups);
+  app
+    .route("/group")
+    .get(requireLogin, getUsersGroups)
+    .post(requireLogin, createUserGroups);
   app
     .route("/group/:id")
-    .put(updateUserGroups)
-    .get(getUserGroup)
-    .delete(deleteUserGroups);
+    .put(requireLogin, updateUserGroups)
+    .get(requireLogin, getUserGroup)
+    .delete(requireLogin, deleteUserGroups);
 
-  app.route("/group/user").get(getGroupsWithPhonebook);
-  app.route("/group/user/:id").get(getGroupWithPhonebook);
+  app.route("/group-user").get(requireLogin, getGroupsWithPhonebook);
+  app.route("/group/:id/user").get(requireLogin, getGroupWithPhonebook);
+
+  app.route("/user/:id/group").get(requireLogin, getUserGroups);
 
   app
     .route("/user/:id/group")
-    .get(getUserGroups)
-    .post(addUserToGroup)
-    .delete(removeUserFromGroup);
+    .post(requireLogin, addUserToGroup)
+    .delete(requireLogin, removeUserFromGroup);
 };
 
-export default todoRoutes;
+export default PhoneBookRoutes;
