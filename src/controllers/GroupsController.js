@@ -1,5 +1,5 @@
 import sql from "mssql";
-import config from "../db/config.js";
+import config from "../db/Config.js";
 
 // Get all User Groups
 export const getUsersGroups = async (req, res) => {

@@ -1,5 +1,5 @@
 import sql from "mssql";
-import config from "../db/config.js";
+import config from "../db/Config.js";
 
 // Get all Groups with Phonebook details
 export const getGroupsWithPhonebook = async (req, res) => {

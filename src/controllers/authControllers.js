@@ -1,4 +1,4 @@
-import config from "../db/config.js";
+import config from "../db/Config.js";
 import bcrypt from "bcrypt";
 import mssql from "mssql";
 import Jwt from "jsonwebtoken";

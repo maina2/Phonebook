@@ -1,6 +1,6 @@
 import express from "express";
 import bodyParser from "body-parser";
-import config from "./src/db/config.js";
+import config from "./src/db/Config.js";
 import PhoneBookRoutes from "./src/routes/PhoneRoutes.js";
 import auth from "./src/routes/auth.js";
 
