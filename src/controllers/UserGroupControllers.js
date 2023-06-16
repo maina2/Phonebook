@@ -5,17 +5,20 @@ import config from "../db/config.js";
 export const getUserGroups = async (req, res) => {
   try {
     const { id } = req.params;
+    console.log("running");
+
     let pool = await sql.connect(config.sql);
     const result = await pool.request().input("UserID", sql.Int, id).query(`
         SELECT g.ID AS GroupID, g.GroupName
         FROM Groups g
-        INNER JOIN UserGroups ug ON g.ID = ug.GroupID
-        WHERE ug.UserID = @UserID
+        INNER JOIN PhonebookGroups ug ON g.ID = ug.GroupID
+        WHERE ug.PhonebookID =@UserID
       `);
-
-    !result.recordset[0]
-      ? res.status(404).json({ message: "User Groups not found" })
-      : res.status(200).json(result.recordset);
+    if (!result.recordset[0]) {
+      res.status(404).json({ message: "User Groups not found" });
+    } else {
+      res.status(200).json(result.recordset);
+    }
   } catch (error) {
     res
       .status(500)
@@ -36,8 +39,9 @@ export const addUserToGroup = async (req, res) => {
       .input("UserID", sql.Int, id)
       .input("GroupID", sql.Int, groupID)
       .query(
-        "INSERT INTO UserGroups (UserID, GroupID) VALUES (@UserID, @GroupID)"
+        "INSERT INTO PhonebookGroups (PhonebookID, GroupID) VALUES (@UserID, @GroupID)"
       );
+
     res.status(201).json({ message: "User added to group successfully" });
   } catch (error) {
     res
@@ -59,8 +63,9 @@ export const removeUserFromGroup = async (req, res) => {
       .input("UserID", sql.Int, id)
       .input("GroupID", sql.Int, groupID)
       .query(
-        "DELETE FROM UserGroups WHERE UserID = @UserID AND GroupID = @GroupID"
+        "DELETE FROM PhonebookGroups WHERE PhonebookID = @UserID AND GroupID = @GroupID"
       );
+
     res.status(200).json({ message: "User removed from group successfully" });
   } catch (error) {
     res.status(500).json({
